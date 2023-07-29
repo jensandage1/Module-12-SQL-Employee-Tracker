@@ -19,10 +19,15 @@ CREATE TABLE roles (
 );
 
 CREATE TABLE employee (
-    id INT,
+     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30),
     last_name VARCHAR(30),
     roles_id INT,
-    FOREIGN KEY (roles_id)
-    REFERENCES roles(id)
+    INDEX roles_ind(roles_id),
+    CONSTRAINT fk_roles FOREIGN KEY (roles_id)
+    REFERENCES roles(id),
+    manager_id INT,
+    INDEX manager_ind(manager_id),
+    CONSTRAINT fk_manager FOREIGN KEY (manager_id)
+    REFERENCES employee(id)
 );
