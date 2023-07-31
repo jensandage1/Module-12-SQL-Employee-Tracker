@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-// const server = require('./server');
+
 const mysql = require('mysql2');
 require("console.table");
 
@@ -16,7 +16,7 @@ const connection = mysql.createConnection(
 
         connection.connect(function(err) {
             if (err) throw err;
-        //    console.log("connected");
+       
 
         });
         
@@ -196,12 +196,12 @@ async function addRole() {
 };
 
 
-//function to update an employee's role - 
+//function to update an employee's role - working
 async function updateRole(){
     const [employee] = await connection.promise().query("SELECT * FROM employee");
     const [roles] = await connection.promise().query("SELECT * FROM roles");
     try {
-        const { id, first_name, last_name, roles_id, title } = await inquirer.prompt ([
+        const { employee_id, updated_role } = await inquirer.prompt ([
             {
                 type: "list",
                 name: "employee_id",
@@ -217,16 +217,16 @@ async function updateRole(){
                 type: "list",
                 name: "updated_role",
                 message: "Which role would you like to reassign the selected employee to?",
-                choices: roles.map(({roles_id, title})=> {
+                choices: roles.map(({id, title})=> {
                     return {
-                        value: roles_id,
+                        value: id,
                         name: title
                     }
                 })
             },
         ])
-    await connection.promise().query(`UPDATE roles SET role_id = ${roles_id} WHERE id = ${id};`)
-    viewAllRoles();
+    await connection.promise().query(`UPDATE employee SET roles_id = ${updated_role} WHERE id = ${employee_id};`)
+    viewAllEmployees();
 } catch(err){
     console.log(err);
 }};
